@@ -1,0 +1,52 @@
+import heapq
+def a_star_search(graph, heuristic, start, goal):
+    open_list = []
+    heapq.heappush(open_list, (0, start))
+    g_cost = {start: 0}
+    parent = {start: None}
+    while open_list:
+        _, current = heapq.heappop(open_list)
+        if current == goal:
+            path = []
+            while current is not None:
+                path.append(current)
+                current = parent[current]
+            path.reverse()
+            return path, g_cost[goal]
+        for neighbor, cost in graph[current]:
+            new_g = g_cost[current] + cost
+            if neighbor not in g_cost or new_g < g_cost[neighbor]:
+                g_cost[neighbor] = new_g
+                f_cost = new_g + heuristic[neighbor]
+                heapq.heappush(open_list, (f_cost, neighbor))
+                parent[neighbor] = current
+    return None, float('inf')
+
+# -------- INPUT --------
+graph = {
+    'A': [('B', 1), ('C', 3)],
+    'B': [('D', 3), ('E', 1)],
+    'C': [('F', 5)],
+    'D': [('G', 3)],
+    'E': [('G', 1)],
+    'F': [('G', 2)],
+    'G': []
+}
+heuristic = {
+    'A': 7,
+    'B': 6,
+    'C': 4,
+    'D': 2,
+    'E': 1,
+    'F': 3,
+    'G': 0
+}
+start = 'A'
+goal = 'G'
+
+# -------- FUNCTION CALL --------
+path, cost = a_star_search(graph, heuristic, start, goal)
+
+# -------- OUTPUT --------
+print("Optimal Path:", path)
+print("Total Cost:", cost)
