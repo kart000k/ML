@@ -1,0 +1,47 @@
+# Candidate Elimination Algorithm - with dataset embedded
+
+# Dataset (from your notebook)
+# Attributes: Outlook, Temperature, Humidity, Wind, Water, Forecast → Play (Yes/No)
+
+data = [
+    ["sunny",   "warm",  "high",   "strong", "cool",   "change",  "No"],
+    ["rainy",   "cold",  "high",   "strong", "warm",   "change",  "No"],
+    ["sunny",   "warm",  "high",   "strong", "warm",   "same",    "Yes"],
+    ["sunny",   "warm",  "high",   "strong", "warm",   "same",    "Yes"],
+    ["sunny",   "warm",  "strong", "normal", "warm",   "same",    "Yes"]
+]
+
+# Extract concepts (features) and targets (Yes/No)
+concepts = [row[:-1] for row in data]
+targets  = [row[-1]  for row in data]
+
+# Candidate Elimination Function
+def candidate_elimination(concepts, targets):
+    specific_h = concepts[0].copy()
+    general_h = [["?" for i in range(len(specific_h))] 
+                 for j in range(len(specific_h))]
+
+    for i, h in enumerate(concepts):
+        if targets[i] == "Yes":
+            # Generalize specific hypothesis
+            for x in range(len(specific_h)):
+                if h[x] != specific_h[x]:
+                    specific_h[x] = "?"
+        else:  # Negative example
+            # Specialize general hypothesis
+            for x in range(len(specific_h)):
+                if h[x] != specific_h[x]:
+                    general_h[x][x] = specific_h[x]
+                else:
+                    general_h[x][x] = "?"
+
+    return specific_h, general_h
+
+# Run the algorithm
+specific_h, general_h = candidate_elimination(concepts, targets)
+
+# Output
+print("Final Specific Hypothesis:", specific_h)
+print("\nFinal General Hypothesis:")
+for h in general_h:
+    print(h)
