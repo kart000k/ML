@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+plt.rcParams['figure.figsize'] = (12.0, 9.0)
+
+# preprocessing input data
+data = pd.read_csv('data.csv')
+X = data.iloc[:, 0]
+Y = data.iloc[:, 1]
+
+# building the model
+X_mean = np.mean(X)
+Y_mean = np.mean(Y)
+
+num = 0
+den = 0
+for i in range(len(X)):
+    num += (X[i] - X_mean) * (Y[i] - Y_mean)
+    den += (X[i] - X_mean) ** 2
+
+m = num / den
+c = Y_mean - m * X_mean
+
+print("Slope (m):", m)
+print("Intercept (c):", c)
+
+# ---------- Predicted values ----------
+Y_pred = m * X + c
+
+# ---------- Plotting ----------
+plt.scatter(X, Y)                 # actual
+plt.scatter(X, Y_pred, color='red')  # predicted
+plt.show()
