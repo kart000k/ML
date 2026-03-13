@@ -1,0 +1,36 @@
+# Find-S Algorithm Implementation
+
+# Training data
+data = [
+    ['Sunny', 'Warm', 'Normal', 'Strong', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'Strong', 'Yes'],
+    ['Rainy', 'Cold', 'High', 'Weak', 'No']
+]
+
+# Initialize hypothesis with first positive example
+hypothesis = None
+
+for row in data:
+    if row[-1] == 'Yes':
+        if hypothesis is None:
+            hypothesis = row[:-1]
+        else:
+            for i in range(len(hypothesis)):
+                if hypothesis[i] != row[i]:
+                    hypothesis[i] = '?'
+
+print("Final Hypothesis:", hypothesis)
+with open('training_data.csv', 'r') as file:
+    reader = csv.reader(file)
+    next(reader)  # Skip header row
+
+    for row in reader:
+        if row[-1] == 'Yes':  # Check positive example
+            if hypothesis is None:
+                hypothesis = row[:-1]
+            else:
+                for i in range(len(hypothesis)):
+                    if hypothesis[i] != row[i]:
+                        hypothesis[i] = '?'
+
+print("Final Hypothesis:", hypothesis)
