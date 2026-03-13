@@ -1,0 +1,41 @@
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+data = {
+'Price': [10, 20, 15, 30, 25, 18, 22, 35],
+'Advertising': [50, 60, 45, 80, 70, 55, 65, 90],
+'Store_Size': [100, 150, 120, 200, 180, 140, 160, 220],
+'Sales': ['Low', 'High', 'Low', 'High', 'High', 'Low', 'High', 'High']
+}
+
+df = pd.DataFrame(data)
+
+print("Retail Dataset:")
+print(df)
+
+X = df[['Price', 'Advertising', 'Store_Size']]
+y = df['Sales']
+X_train, X_test, y_train, y_test = train_test_split(
+X, y, test_size=0.3, random_state=1
+)
+
+model = DecisionTreeClassifier(criterion='entropy')
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("\nTest Data Predictions:")
+print(y_pred)
+accuracy = metrics.accuracy_score(y_test, y_pred)
+print("\nModel Accuracy:", accuracy)
+plt.figure(figsize=(10, 6))
+tree.plot_tree(
+model,
+feature_names=X.columns,
+class_names=model.classes_,
+filled=True
+)
+plt.title("Decision Tree for Retail Sales Classification")
+plt.show()
